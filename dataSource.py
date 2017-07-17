@@ -28,9 +28,15 @@ def getData(index,cate):
 
     ##字符处理
     jsonh = html.text
-    jsons = json.loads(re.sub(r",\s*?]", "]", jsonh))
-    jsonss = jsons['list']
     param = []
+    try:
+
+        jsons = json.loads(re.sub(r",\s*?]", "]", jsonh))
+        jsonss = jsons['list']
+    except ValueError:
+        print '--------warn当前%s页出现异常' % index
+        return param
+
     for jsonhh in jsonss:
         itemId = str(jsonhh['itemId']).encode("utf-8")
         link = str(jsonhh['link']).encode("utf-8")

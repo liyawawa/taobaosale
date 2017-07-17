@@ -4,6 +4,8 @@
 # @Author  : liya
 # @Site    : 
 # @File    : test.py
+from _mysql_exceptions import IntegrityError
+
 import dataSource
 from sql import Mysql
 import time
@@ -13,21 +15,26 @@ mysql = Mysql()
 
 sqlAll = "insert into taobaoSale(`itemId`,`link`,`title`,`subtitle`,`intro`,`imagePath`,`staticImgPath`,`imagePaths`,`sellPrice`,`price`,`itemUrl`,`descUrl`,`planUrl`,`ulandUrl`,`historySales`,`viewCount`,`sellerId`,`sellerType`,`sellerName`,`flagShip`,`certIcon`,`cpId`,`cpPrice`,`cpSpare`,`cpCount`,`cpTotal`,`cpCondition`,`cpLimit`,`cpStarts`,`cpExpired`,`cpLevel`,`cpUrl`,`gold`,`ju`,`qiang`,`freeExpress`,`freeExpressBack`,`commission`,`cgold`,`goodRatePercentage`,`dx`,`is_brand`) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
 
-i = 58
+i = 1
 while True:
-    cate = 7
+    cate = 8
     print '------当前进度--------：第%s页' % i
     param = dataSource.getData(i,cate)
     i = i + 1
 
-    if param == '[]':
+    if len(param) == 0:
+        print '--------当前%s页为终结页' % (i-1)
         break
     else:
-        # 除去重复数据
-
-        result = mysql.insertMany(sqlAll, param)
-        mysql.end()
-        time.sleep(1)
+        # 异常除去重复数据
+        try:
+            result = mysql.insertMany(sqlAll, param)
+            mysql.end()
+        except IntegrityError:
+            print '--------warn当前%s页出现异常' % i
+            continue
+        finally:
+            time.sleep(1)
 
 mysql.dispose()
 # jsonss = json.loads(jsons['list'][1:-1])

@@ -17,12 +17,12 @@ sqlAll = "insert into taobaoSale(`itemId`,`link`,`title`,`subtitle`,`intro`,`ima
 
 i = 1
 while True:
-    cate = 4
+    cate = 3
     print '------当前进度--------：第%s页' % i
-    param = dataSource.getData(i,cate)
+    param = dataSource.getData(i,cate,mysql)
     i = i + 1
 
-    if len(param) == 0:
+    if param == ['none']:
         print '--------当前%s页为终结页' % (i-1)
         break
     else:

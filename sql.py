@@ -44,6 +44,23 @@ conn
                               db=Config.DBNAME, use_unicode=False, charset=Config.DBCHAR, cursorclass=DictCursor)
         return __pool.connection()
 
+    def getOne(self, sql, param=None):
+        """ 
+        @summary: 执行查询，并取出第一条 
+        @param sql:查询ＳＱＬ，如果有查询条件，请只指定条件列表，并将条件值使用参数[param]传递进来 
+        @param param: 可选参数，条件列表值（元组/列表） 
+        @return: result list/boolean 查询到的结果集 
+        """
+        if param is None:
+            count = self._cursor.execute(sql)
+        else:
+            count = self._cursor.execute(sql, param)
+        if count > 0:
+            result = self._cursor.fetchone()
+        else:
+            result = False
+        return result
+
     def insertOne(self, sql, value):
         """ 
         @summary: 向数据表插入一条记录 

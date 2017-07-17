@@ -10,11 +10,11 @@ import json
 import requests
 
 
-def getData(index,cate):
+def getData(index,cate,mysql):
     reload(sys)
     sys.setdefaultencoding('utf8')
 
-    payload = {'page': str(index), 'submit': '1', 'nav': 'tm', 'cate': str(cate), 'sort': 'zh', 'starttime': '0', 'inajax': '1'}
+    payload = {'page': str(index), 'submit': '1', 'nav': 'tm', 'cate': str(cate), 'sort': 'couponValue', 'starttime': '0', 'inajax': '1'}
     url = 'http://fmgrgg.agent.yqjuejin.com'
     cookies = dict(sid='3iu0c8gq0lk52dph0ne6rfu2h2')
     headers = {'Accept': 'application/json, text/plain, */*', 'Accept-Encoding': 'gzip, deflate',
@@ -28,17 +28,31 @@ def getData(index,cate):
 
     ##字符处理
     jsonh = html.text
+
     param = []
     try:
 
         jsons = json.loads(re.sub(r",\s*?]", "]", jsonh))
         jsonss = jsons['list']
+
+        if jsonss == '':
+            return ['none']
     except ValueError:
         print '--------warn当前%s页出现异常' % index
         return param
 
+    sql = 'SELECT id FROM taobaoSale WHERE itemId = %s'
+
     for jsonhh in jsonss:
         itemId = str(jsonhh['itemId']).encode("utf-8")
+
+        ## 检验数据是否存在
+        result = mysql.getOne(sql,itemId)
+
+        if result != False:
+            print "%s,该号商品已存在" % itemId
+            continue
+
         link = str(jsonhh['link']).encode("utf-8")
         title = str(jsonhh['title']).encode("utf-8")
         subtitle = str(jsonhh['subtitle']).encode("utf-8")

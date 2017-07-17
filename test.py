@@ -29,7 +29,6 @@ while True:
         mysql.end()
         time.sleep(1)
 
-
 mysql.dispose()
 # jsonss = json.loads(jsons['list'][1:-1])
 # print jsonss

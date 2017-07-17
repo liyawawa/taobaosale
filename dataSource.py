@@ -4,16 +4,17 @@
 # @Author  : liya
 # @Site    : 
 # @File    : dataSource.py
+import re
 import sys
 import json
 import requests
 
 
-def getData(index):
+def getData(index,cate):
     reload(sys)
     sys.setdefaultencoding('utf8')
 
-    payload = {'page': str(index), 'submit': '1', 'nav': 'tm', 'cate': '0', 'sort': 'zh', 'starttime': '0', 'inajax': '1'}
+    payload = {'page': str(index), 'submit': '1', 'nav': 'tm', 'cate': str(cate), 'sort': 'zh', 'starttime': '0', 'inajax': '1'}
     url = 'http://fmgrgg.agent.yqjuejin.com'
     cookies = dict(sid='3iu0c8gq0lk52dph0ne6rfu2h2')
     headers = {'Accept': 'application/json, text/plain, */*', 'Accept-Encoding': 'gzip, deflate',
@@ -24,9 +25,11 @@ def getData(index):
                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36',
                'X-Requested-With': 'XMLHttpRequest'}
     html = requests.get(url, params=payload, cookies=cookies, headers=headers)
-    jsons = json.loads(html.text)
-    jsonss = jsons['list']
 
+    ##字符处理
+    jsonh = html.text
+    jsons = json.loads(re.sub(r",\s*?]", "]", jsonh))
+    jsonss = jsons['list']
     param = []
     for jsonhh in jsonss:
         itemId = str(jsonhh['itemId']).encode("utf-8")

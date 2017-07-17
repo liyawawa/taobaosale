@@ -5,6 +5,7 @@
 # @Site    : 
 # @File    : Config.py
 
+##数据库配置
 
 DBHOST = "47.92.34.62"
 DBPORT = 3306

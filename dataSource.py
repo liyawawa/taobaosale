@@ -31,10 +31,8 @@ def getData(index,cate,mysql):
 
     param = []
     try:
-
         jsons = json.loads(re.sub(r",\s*?]", "]", jsonh))
         jsonss = jsons['list']
-
         if jsonss == '':
             return ['none']
     except ValueError:
@@ -48,7 +46,6 @@ def getData(index,cate,mysql):
 
         ## 检验数据是否存在
         result = mysql.getOne(sql,itemId)
-
         if result != False:
             print "%s,该号商品已存在" % itemId
             continue
@@ -104,5 +101,4 @@ def getData(index,cate,mysql):
             cpCount, cpTotal, cpCondition, cpLimit, cpStarts, cpExpired, cpLevel, cpUrl, gold, ju, qiang,
             freeExpress,
             freeExpressBack, commission, cgold, goodRatePercentage, dx, is_brand])
-
     return param
